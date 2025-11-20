@@ -1,0 +1,63 @@
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: '/home/ika/.cache/torch/checkpoints/jx_vit_base_p16_224-80ecf9dd.pth'
+  METRIC_LOSS_TYPE: 'triplet'
+  IF_LABELSMOOTH: 'on'  # Enable label smoothing (from optimized config)
+  IF_WITH_CENTER: 'no'
+  NAME: 'transformer'
+  NO_MARGIN: False  # Use margin for triplet loss (from optimized config)
+  DEVICE_ID: ('0')
+  TRANSFORMER_TYPE: 'vit_base_patch16_224_TransReID'
+  STRIDE_SIZE: [12, 12]
+  SIE_CAMERA: True
+  SIE_COE: 3.0
+  JPM: True
+  RE_ARRANGE: True
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+  PIXEL_MEAN: [0.485, 0.456, 0.406]  # ImageNet mean (from optimized config)
+  PIXEL_STD: [0.229, 0.224, 0.225]  # ImageNet std (from optimized config)
+
+DATASETS:
+  NAMES: ('ltcc')
+  ROOT_DIR: ('/mnt/2tb_ssd/yzlm/TwinProject/experiments/reid/ltcc/data')
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+
+SOLVER:
+  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 60
+  BASE_LR: 0.0008
+  MARGIN: 0.3  # Triplet loss margin
+  IMS_PER_BATCH: 64
+  WARMUP_METHOD: 'linear'
+  LARGE_FC_LR: False
+  CHECKPOINT_PERIOD: 5
+  LOG_PERIOD: 30
+  EVAL_PERIOD: 1
+  WEIGHT_DECAY:  1e-4
+  WEIGHT_DECAY_BIAS: 1e-4
+  BIAS_LR_FACTOR: 2
+  SEED: 1234
+  # Early stopping configuration
+  EARLY_STOP_ENABLED: True  # Enable/disable early stopping
+  EARLY_STOP_PATIENCE: 10  # Stop if no improvement for N eval periods
+  EARLY_STOP_MIN_DELTA: 0.001  # Minimum improvement (0.1%) to count as progress
+
+TEST:
+  EVAL: True
+  IMS_PER_BATCH: 128
+  RE_RANKING: False
+  WEIGHT: ''
+  NECK_FEAT: 'before'
+  FEAT_NORM: 'yes'
+
+OUTPUT_DIR: '/home/ika/2tb_ssd/yzlm/TwinProject/experiments/reid/ltcc/logs/ltcc_vit_transreid_stride'

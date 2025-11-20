@@ -162,6 +162,11 @@ _C.SOLVER.EVAL_PERIOD = 10
 # contain 16 images per batch
 _C.SOLVER.IMS_PER_BATCH = 64
 
+# Early stopping parameters
+_C.SOLVER.EARLY_STOP_ENABLED = True
+_C.SOLVER.EARLY_STOP_PATIENCE = 10
+_C.SOLVER.EARLY_STOP_MIN_DELTA = 0.001
+
 # ---------------------------------------------------------------------------- #
 # TEST
 # ---------------------------------------------------------------------------- #
